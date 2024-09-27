@@ -13,6 +13,8 @@ jobs:
           - 11211:11211
 
     steps:
+      - name: install libraries
+        run: sudo apt install -y zip git libzip-dev libcurl3-dev libssl-dev libmemcached-dev
       - name: Checkout repo
         uses: actions/checkout@v3
 
