@@ -1,0 +1,28 @@
+name: phpuinit
+
+on: [push]
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    services:
+      grima_proxy_auth_memcached_test:
+        image: memcached:latest
+        ports:
+          - 11211:11211
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Install Composer dependencies
+        uses: php-actions/composer@v6
+
+      - name: Run PHPUnit
+        run: ./vendor/bin/phpunit --configuration phpunit.xml --coverage-text
