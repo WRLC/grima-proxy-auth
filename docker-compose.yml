@@ -1,0 +1,38 @@
+services:
+  grima_proxy_auth_php:
+    build: .
+    container_name: grima_proxy_auth_php
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - ~/.gitconfig:/etc/gitconfig
+      - ./xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+    secrets:
+      - user_ssh_key
+    networks:
+      - proxy
+
+  grima_proxy_auth-nginx:
+    image: nginx
+    container_name: grima_proxy_auth-nginx
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grima_proxy_auth-nginx.rule=Host(`grima-proxy-auth.wrlc.localhost`)"
+      - "traefik.http.routers.grima_proxy_auth-nginx.tls=true"
+      - "traefik.http.routers.grima_proxy_auth-nginx.entrypoints=websecure"
+    volumes:
+      - ./:/app
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - grima_proxy_auth_php
+    networks:
+      - proxy
+
+secrets:
+  user_ssh_key:
+    file: ~/.ssh/id_rsa
+
+networks:
+  proxy:
+    external: true
