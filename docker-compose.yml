@@ -29,6 +29,12 @@ services:
     networks:
       - proxy
 
+  grima_proxy_auth_memcached_test:
+    image: memcached:latest
+    container_name: grima_proxy_auth_memcached_test
+    networks:
+      - proxy
+
 secrets:
   user_ssh_key:
     file: ~/.ssh/id_rsa
