@@ -9,8 +9,6 @@ jobs:
     services:
       grima_proxy_auth_memcached_test:
         image: memcached:latest
-        ports:
-          - 11211:11211
 
     steps:
       - name: install libraries
