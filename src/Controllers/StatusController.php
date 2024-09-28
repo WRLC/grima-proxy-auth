@@ -14,7 +14,7 @@ class StatusController
     {
         // Load the environment variables from the .env file
         $dotenv = Dotenv::createImmutable(dirname(__DIR__, 2), '.env');
-        $dotenv->load();
+        $dotenv->safeLoad();
 
         $response = new Response();  // Create a new response
 
