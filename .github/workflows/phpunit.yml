@@ -33,4 +33,4 @@ jobs:
           args: --ignore-platform-req=ext-memcached
 
       - name: Run PHPUnit
-        run: ./vendor/bin/phpunit --configuration phpunit.xml
+        run: ./vendor/bin/phpunit --configuration ci.phpunit.xml
