@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: install libraries
-        run: apt install -y zip git libzip-dev libcurl3-dev libssl-dev libmemcached-dev
+        run: sudo apt install -y zip git libzip-dev libcurl3-dev libssl-dev libmemcached-dev
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -30,7 +30,7 @@ jobs:
           composer: "--ignore-platform-req=ext-memcached"
 
       - name: Run PHPUnit
-        run: ./vendor/bin/phpunit --configuration phpunit.xml --display-warnings --display-deprecations
+        run: ./vendor/bin/phpunit --configuration phpunit.xml
         env:
           MEMCACHED_HOST: localhost
           MEMCACHED_PORT: 11211
