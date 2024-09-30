@@ -1,4 +1,4 @@
-name: phpuinit
+name: phpunit
 
 on: [push]
 
