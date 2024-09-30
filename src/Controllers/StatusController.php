@@ -10,6 +10,13 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class StatusController
 {
+    /**
+     * Get the status of the session
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     *
+     */
     public function getStatus(ServerRequestInterface $request): ResponseInterface
     {
         // Load the environment variables from the .env file
@@ -19,16 +26,25 @@ class StatusController
         $response = new Response();  // Create a new response
 
 
-        // Check if the cookie is set
+        // If cookie is set...
         if ($this->getCookieValue($request) !== null) {
+            // If session is set...
             if ($this->getMemcachedSession($this->getCookieValue($request)) !== null) {
-                return $response->withStatus(200);  // Return a 200 OK response
+                return $response->withStatus(200);  // ...return a 200 OK response
             }
         }
 
-        return $response->withStatus(403);  // Return a 403 Forbidden response
+        // If cookie is not set or session is not set...
+        return $response->withStatus(403);  // ..return a 403 Forbidden response
     }
 
+    /**
+     * Get the value of the cookie
+     *
+     * @param ServerRequestInterface $request
+     * @return string|null
+     *
+     */
     public function getCookieValue(ServerRequestInterface $request): ?string
     {
         $cookies = $request->getCookieParams();  // Get the cookies from the request
@@ -40,6 +56,13 @@ class StatusController
         return $cookies[$_ENV['COOKIE_NAME']];  // Return the value of the cookie
     }
 
+    /**
+     * Get the value of the session key
+     *
+     * @param string $sessionKey
+     * @return array|null
+     *
+     */
     public function getMemcachedSession(string $sessionKey): ?array
     {
         $memcached = new Memcached();  // Create a new Memcached instance

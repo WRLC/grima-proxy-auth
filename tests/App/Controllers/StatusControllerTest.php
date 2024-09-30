@@ -18,8 +18,9 @@ class StatusControllerTest extends TestCase
      * Test getMemcachedSession method when session is set
      *
      * @covers ::getMemcachedSession
+     * @returns void
      */
-    public function testGetMemcachedSession()
+    public function testGetMemcachedSession(): void
     {
         $memcached = new Memcached();
         $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
@@ -34,8 +35,9 @@ class StatusControllerTest extends TestCase
      * Test getMemcachedSession method when session is not set
      *
      * @covers ::getMemcachedSession
+     * @returns void
      */
-    public function testGetMemcachedSessionReturnsNull()
+    public function testGetMemcachedSessionReturnsNull(): void
     {
         $memcached = new Memcached();
         $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
@@ -50,8 +52,9 @@ class StatusControllerTest extends TestCase
      *
      * @covers ::getCookieValue
      * @throws Exception
+     * @returns void
      */
-    public function testGetCookieValue()
+    public function testGetCookieValue(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
@@ -66,8 +69,9 @@ class StatusControllerTest extends TestCase
      *
      * @covers ::getCookieValue
      * @throws Exception
+     * @returns void
      */
-    public function testGetCookieValueReturnsNull()
+    public function testGetCookieValueReturnsNull(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
@@ -82,8 +86,9 @@ class StatusControllerTest extends TestCase
      *
      * @covers ::getStatus
      * @throws Exception
+     * @returns void
      */
-    public function testGetStatusReturns200WhenSessionKeyIsSet()
+    public function testGetStatusReturns200WhenSessionKeyIsSet(): void
     {
 
         $memcached = new Memcached();
@@ -105,8 +110,9 @@ class StatusControllerTest extends TestCase
      *
      * @covers ::getStatus
      * @throws Exception
+     * @returns void
      */
-    public function testGetStatusReturns403WhenSessionIsNull()
+    public function testGetStatusReturns403WhenSessionIsNull(): void
     {
         $memcached = new Memcached();
         $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
@@ -127,8 +133,9 @@ class StatusControllerTest extends TestCase
      *
      * @covers ::getStatus
      * @throws Exception
+     * @returns void
      */
-    public function testGetStatusReturns403WhenSessionKeyIsNotSet()
+    public function testGetStatusReturns403WhenSessionKeyIsNotSet(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
