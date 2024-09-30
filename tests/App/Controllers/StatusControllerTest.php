@@ -23,10 +23,10 @@ class StatusControllerTest extends TestCase
     {
         $memcached = new Memcached();
         $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
-        $memcached->set('123456', ['test']);
+        $memcached->set('12345', ['test']);
 
         $statusController = new StatusController();
-        $this->assertEquals(['test'], $statusController->getMemcachedSession('123456'));
+        $this->assertEquals(['test'], $statusController->getMemcachedSession('12345'));
 
     }
 
@@ -39,10 +39,10 @@ class StatusControllerTest extends TestCase
     {
         $memcached = new Memcached();
         $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
-        $memcached->delete('123456');
+        $memcached->delete('12345');
 
         $statusController = new StatusController();
-        $this->assertEquals(null, $statusController->getMemcachedSession('123456'));
+        $this->assertEquals(null, $statusController->getMemcachedSession('12345'));
     }
 
     /**
@@ -55,10 +55,10 @@ class StatusControllerTest extends TestCase
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
-            ->willReturn([$_ENV['COOKIE_NAME'] => '123456']);
+            ->willReturn([$_ENV['COOKIE_NAME'] => '12345']);
 
         $statusController = new StatusController();
-        $this->assertEquals('123456', $statusController->getCookieValue($request));
+        $this->assertEquals('12345', $statusController->getCookieValue($request));
     }
 
     /**
@@ -88,11 +88,11 @@ class StatusControllerTest extends TestCase
 
         $memcached = new Memcached();
         $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
-        $memcached->set('123456', ['test']);
+        $memcached->set('12345', ['test']);
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
-            ->willReturn([$_ENV['COOKIE_NAME'] => '123456']);
+            ->willReturn([$_ENV['COOKIE_NAME'] => '12345']);
 
         $statusController = new StatusController();
         $response = $statusController->getStatus($request);
@@ -110,11 +110,11 @@ class StatusControllerTest extends TestCase
     {
         $memcached = new Memcached();
         $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
-        $memcached->delete('123456');
+        $memcached->delete('12345');
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
-            ->willReturn([$_ENV['COOKIE_NAME'] => '123456']);
+            ->willReturn([$_ENV['COOKIE_NAME'] => '12345']);
 
         $statusController = new StatusController();
         $response = $statusController->getStatus($request);
