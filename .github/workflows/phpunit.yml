@@ -12,6 +12,11 @@ jobs:
         ports:
           - 11211:11211
 
+    env:
+      MEMCACHED_HOST: localhost
+      MEMCACHED_PORT: 11211
+      COOKIE_NAME: '_test'
+
     steps:
       - name: install libraries
         run: sudo apt install -y zip git libzip-dev libcurl3-dev libssl-dev libmemcached-dev
@@ -25,13 +30,9 @@ jobs:
           extensions: mbstring, intl, zip, pcntl, xml, curl, json, xdebug, memcached
 
       - name: Install Composer dependencies
-        uses: "ramsey/composer-install@v3"
+        uses: php-actions/composer@v6
         with:
-          composer: "--ignore-platform-req=ext-memcached"
+          args: --ignore-platform-req=ext-memcached
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit --configuration phpunit.xml
-        env:
-          MEMCACHED_HOST: localhost
-          MEMCACHED_PORT: 11211
-          COOKIE_NAME: '_test'
