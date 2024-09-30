@@ -7,17 +7,14 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      grima_proxy_auth_memcached_test:
-        image: memcached:latest
-        options:
-          --health-cmd "timeout 5 bash -c 'cat < /dev/null > /dev/udp/127.0.0.1/11211'" 
-          --health-interval 10s 
-          --health-timeout 5s 
-          --health-retries 5
+      memcached:
+        image: memcached
+        ports:
+          - 11211:11211
 
     steps:
       - name: install libraries
-        run: sudo apt install -y zip git libzip-dev libcurl3-dev libssl-dev libmemcached-dev
+        run: apt update && apt install -y zip git libzip-dev libcurl3-dev libssl-dev libmemcached-dev
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -28,9 +25,13 @@ jobs:
           extensions: mbstring, intl, zip, pcntl, xml, curl, json, xdebug, memcached
 
       - name: Install Composer dependencies
-        uses: php-actions/composer@v6
+        uses: "ramsey/composer-install@v3"
         with:
-          args: --ignore-platform-req=ext-memcached
+          composer: "--ignore-platform-req=ext-memcached"
 
       - name: Run PHPUnit
-        run: ./vendor/bin/phpunit --configuration ci.phpunit.xml
+        run: ./vendor/bin/phpunit --configuration phpunit.xml --display-warnings --display-deprecations
+        env:
+          MEMCACHED_HOST: localhost
+          MEMCACHED_PORT: 11211
+          COOKIE_NAME: '_test'

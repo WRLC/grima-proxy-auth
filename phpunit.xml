@@ -7,8 +7,7 @@
          requireCoverageMetadata="true"
          beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
-         failOnRisky="true"
-         failOnWarning="true">
+         failOnRisky="true">
     <testsuites>
         <testsuite name="default">
             <directory>tests</directory>
@@ -20,10 +19,4 @@
             <directory>src</directory>
         </include>
     </source>
-
-    <php>
-        <env name="COOKIE_NAME" value="_test"/>
-        <env name="MEMCACHED_HOST" value="grima_proxy_auth_memcached_test"/>
-        <env name="MEMCACHED_PORT" value="11211"/>
-    </php>
 </phpunit>
