@@ -28,7 +28,6 @@ class StatusControllerTest extends TestCase
 
         $statusController = new StatusController();
         $this->assertEquals(['test'], $statusController->getMemcachedSession('12345'));
-
     }
 
     /**
