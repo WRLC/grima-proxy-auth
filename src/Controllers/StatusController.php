@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use Dotenv\Dotenv;
 use Laminas\Diactoros\Response;
 use Memcached;
 use Psr\Http\Message\ResponseInterface;
@@ -19,10 +18,6 @@ class StatusController
      */
     public function getStatus(ServerRequestInterface $request): ResponseInterface
     {
-        // Load the environment variables from the .env file
-        $dotenv = Dotenv::createImmutable(dirname(__DIR__, 2), '.env');
-        $dotenv->safeLoad();
-
         $response = new Response();  // Create a new response
 
 
