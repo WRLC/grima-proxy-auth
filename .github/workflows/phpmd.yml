@@ -16,6 +16,6 @@ jobs:
         uses: php-actions/phpmd@v1
         with:
           php_version: 8.1
-          path: src/
+          path: src,tests
           output: text
           ruleset: cleancode,codesize,controversial,design,naming,unusedcode
