@@ -44,11 +44,11 @@ class StatusController
     {
         $cookies = $request->getCookieParams();  // Get the cookies from the request
 
-        if (!isset($cookies[$_ENV['COOKIE_NAME']])) {
+        if (!isset($cookies[getenv('COOKIE_NAME')])) {
             return null;  // Return an empty string if the cookie is not set
         }
 
-        return $cookies[$_ENV['COOKIE_NAME']];  // Return the value of the cookie
+        return $cookies[getenv('COOKIE_NAME')];  // Return the value of the cookie
     }
 
     /**
@@ -61,7 +61,7 @@ class StatusController
     public function getMemcachedSession(string $sessionKey): ?array
     {
         $memcached = new Memcached();  // Create a new Memcached instance
-        $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);  // Add server to Memcached instance
+        $memcached->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));  // Add server to Memcached instance
 
         if ($memcached->get($sessionKey) === false) {
             return null;  // Return an empty array if the session key is not set

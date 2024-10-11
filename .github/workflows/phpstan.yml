@@ -1,0 +1,20 @@
+name: PHPStan
+
+on: push
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: php-actions/composer@v6
+        with:
+          php_version: 8.1
+          args: --ignore-platform-req=ext-memcached
+
+      - name: PHPStan
+        uses: php-actions/phpstan@v3
+        with:
+          path: "src tests"
+          php_version: 8.1
