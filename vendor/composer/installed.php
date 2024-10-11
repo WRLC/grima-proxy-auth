@@ -3,7 +3,7 @@
         'name' => 'wrlc/grima-proxy-auth',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'a5c44300647e812ea4dfa12c73542923fc1eff1f',
+        'reference' => '88939574309069ce57e9848e7c1a735260c3392c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -135,6 +135,15 @@
             'install_path' => __DIR__ . '/../phpoption/phpoption',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'phpstan/phpstan' => array(
+            'pretty_version' => '1.12.6',
+            'version' => '1.12.6.0',
+            'reference' => 'dc4d2f145a88ea7141ae698effd64d9df46527ae',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpstan/phpstan',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'phpunit/php-code-coverage' => array(
             'pretty_version' => '10.1.16',
@@ -445,7 +454,7 @@
         'wrlc/grima-proxy-auth' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a5c44300647e812ea4dfa12c73542923fc1eff1f',
+            'reference' => '88939574309069ce57e9848e7c1a735260c3392c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
