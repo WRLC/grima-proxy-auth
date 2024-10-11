@@ -3,7 +3,7 @@
         'name' => 'wrlc/grima-proxy-auth',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '88939574309069ce57e9848e7c1a735260c3392c',
+        'reference' => 'f13955ef276287d61abf28081695d71e8f273a7c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -406,6 +406,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'squizlabs/php_codesniffer' => array(
+            'pretty_version' => '3.10.3',
+            'version' => '3.10.3.0',
+            'reference' => '62d32998e820bddc40f99f8251958aed187a5c9c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../squizlabs/php_codesniffer',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'symfony/polyfill-ctype' => array(
             'pretty_version' => 'v1.31.0',
             'version' => '1.31.0.0',
@@ -454,7 +463,7 @@
         'wrlc/grima-proxy-auth' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '88939574309069ce57e9848e7c1a735260c3392c',
+            'reference' => 'f13955ef276287d61abf28081695d71e8f273a7c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
