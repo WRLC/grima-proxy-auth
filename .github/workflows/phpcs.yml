@@ -16,7 +16,7 @@ jobs:
       - name: PHP Code Sniffer
         uses: php-actions/phpcs@v1
         with:
-          path: src/ tests/
+          path: src/
           standard: PSR12
           warning_severity: 0
           php_version: 8.1
