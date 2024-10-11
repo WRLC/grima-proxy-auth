@@ -23,7 +23,7 @@ class StatusControllerTest extends TestCase
     public function testGetMemcachedSession(): void
     {
         $memcached = new Memcached();
-        $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
+        $memcached->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));
         $memcached->set('12345', ['test']);
 
         $statusController = new StatusController();
