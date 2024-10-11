@@ -39,7 +39,7 @@ class StatusControllerTest extends TestCase
     public function testGetMemcachedSessionReturnsNull(): void
     {
         $memcached = new Memcached();
-        $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
+        $memcached->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));
         $memcached->delete('12345');
 
         $statusController = new StatusController();
@@ -57,7 +57,7 @@ class StatusControllerTest extends TestCase
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
-            ->willReturn([$_ENV['COOKIE_NAME'] => '12345']);
+            ->willReturn([getenv('COOKIE_NAME') => '12345']);
 
         $statusController = new StatusController();
         $this->assertEquals('12345', $statusController->getCookieValue($request));
@@ -91,12 +91,12 @@ class StatusControllerTest extends TestCase
     {
 
         $memcached = new Memcached();
-        $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
+        $memcached->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));
         $memcached->set('12345', ['test']);
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
-            ->willReturn([$_ENV['COOKIE_NAME'] => '12345']);
+            ->willReturn([getenv('COOKIE_NAME') => '12345']);
 
         $statusController = new StatusController();
         $response = $statusController->getStatus($request);
@@ -114,12 +114,12 @@ class StatusControllerTest extends TestCase
     public function testGetStatusReturns403WhenSessionIsNull(): void
     {
         $memcached = new Memcached();
-        $memcached->addServer($_ENV['MEMCACHED_HOST'], $_ENV['MEMCACHED_PORT']);
+        $memcached->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));
         $memcached->delete('12345');
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
-            ->willReturn([$_ENV['COOKIE_NAME'] => '12345']);
+            ->willReturn([getenv('COOKIE_NAME') => '12345']);
 
         $statusController = new StatusController();
         $response = $statusController->getStatus($request);
