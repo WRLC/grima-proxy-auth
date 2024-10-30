@@ -5,6 +5,18 @@ on: push
 jobs:
   phpcs:
     runs-on: ubuntu-latest
+
+    services:
+      memcached:
+        image: memcached
+        ports:
+          - 11211:11211
+
+    env:
+      MEMCACHED_HOST: localhost
+      MEMCACHED_PORT: 11211
+      COOKIE_NAME: '_test'
+
     steps:
       - uses: actions/checkout@v3
 
