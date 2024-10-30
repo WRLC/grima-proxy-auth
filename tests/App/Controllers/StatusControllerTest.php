@@ -24,10 +24,10 @@ class StatusControllerTest extends TestCase
     {
         $memcached = new Memcached();
         $memcached->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));
-        $memcached->set('12345', ['test']);
+        $memcached->set('12345', "test=success");
 
-        $statusController = new StatusController();
-        $this->assertEquals(['test'], $statusController->getMemcachedSession('12345'));
+        $statusController = new StatusController(getenv());
+        $this->assertEquals(['test' => 'success'], $statusController->getMemcachedSession('12345'));
     }
 
     /**
@@ -42,7 +42,7 @@ class StatusControllerTest extends TestCase
         $memcached->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));
         $memcached->delete('12345');
 
-        $statusController = new StatusController();
+        $statusController = new StatusController(getenv());
         $this->assertEquals(null, $statusController->getMemcachedSession('12345'));
     }
 
@@ -59,7 +59,7 @@ class StatusControllerTest extends TestCase
         $request->method('getCookieParams')
             ->willReturn([getenv('COOKIE_NAME') => '12345']);
 
-        $statusController = new StatusController();
+        $statusController = new StatusController(getenv());
         $this->assertEquals('12345', $statusController->getCookieValue($request));
     }
 
@@ -76,7 +76,7 @@ class StatusControllerTest extends TestCase
         $request->method('getCookieParams')
             ->willReturn([]);
 
-        $statusController = new StatusController();
+        $statusController = new StatusController(getenv());
         $this->assertEquals(null, $statusController->getCookieValue($request));
     }
 
@@ -92,13 +92,13 @@ class StatusControllerTest extends TestCase
 
         $memcached = new Memcached();
         $memcached->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));
-        $memcached->set('12345', ['test']);
+        $memcached->set('12345', 'test=success');
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')
             ->willReturn([getenv('COOKIE_NAME') => '12345']);
 
-        $statusController = new StatusController();
+        $statusController = new StatusController(getenv());
         $response = $statusController->getStatus($request);
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -121,7 +121,7 @@ class StatusControllerTest extends TestCase
         $request->method('getCookieParams')
             ->willReturn([getenv('COOKIE_NAME') => '12345']);
 
-        $statusController = new StatusController();
+        $statusController = new StatusController(getenv());
         $response = $statusController->getStatus($request);
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -140,7 +140,7 @@ class StatusControllerTest extends TestCase
         $request->method('getCookieParams')
             ->willReturn([]);
 
-        $statusController = new StatusController();
+        $statusController = new StatusController(getenv());
         $response = $statusController->getStatus($request);
 
         $this->assertEquals(403, $response->getStatusCode());
