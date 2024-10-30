@@ -18,7 +18,7 @@ $request = ServerRequestFactory::fromGlobals(
 $router = new Router();  // Create a new router
 
 // Define a route that responds to GET /status
-$router->map('GET', '/status', [new StatusController(), 'getStatus']);
+$router->map('GET', '/status', [new StatusController($_ENV), 'getStatus']);
 
 $response = $router->dispatch($request);  // Dispatch the request
 
