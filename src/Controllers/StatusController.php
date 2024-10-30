@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class StatusController
 {
+    /** @var array<string, mixed>  */
     private array $env;
 
     public function __construct($env)

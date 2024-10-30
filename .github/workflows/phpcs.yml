@@ -17,6 +17,5 @@ jobs:
         uses: php-actions/phpcs@v1
         with:
           path: src/
-          standard: PSR12
-          warning_severity: 0
+          standard: phpcs.xml
           php_version: 8.1

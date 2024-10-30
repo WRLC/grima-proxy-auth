@@ -16,5 +16,5 @@ jobs:
       - name: PHPStan
         uses: php-actions/phpstan@v3
         with:
-          path: "src tests"
+          configuration: phpstan.neon
           php_version: 8.1
