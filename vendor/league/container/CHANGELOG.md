@@ -2,6 +2,42 @@
 
 All Notable changes to `League\Container` will be documented in this file
 
+## 5.1.0
+
+### Added
+- Attribute based resolution for dependencies using `#[Inject]` and `#[Resolve]` attributes.
+  - Docs: [https://container.thephpleague.com/5.x/attribute-resolution/](https://container.thephpleague.com/5.x/attribute-resolution/)
+- Support for PHPUnit 12 (@ADmad)
+- Explicit non-support for auto-wiring union types.
+
+### Changed
+- Small internal changes for stricter static analysis and type safety. (@ADmad)
+
+### 5.0.1
+
+### Fixed
+- Fixed a small unreachable code bug
+
+## 5.0.0
+
+### Added
+- Ability to overwrite a definition within the container, disabled by default
+
+### Changed
+- PHP requirement now `>=8.1`
+- General language modernisation
+- General prep for future updates and container compilation
+
+## 4.2.4
+
+### Fixed
+- Now properly handle string based fully qualified class names in with preceding slashes. (@M1ke)
+
+## 4.2.3
+
+### Fixed
+- Warnings for PHP 8.4 implicit nullable types (@andypost)
+
 ## 4.2.1
 
 ### Fixed
@@ -117,7 +153,7 @@ All Notable changes to `League\Container` will be documented in this file
 
 ### Added
 - Re-added the `share` proxy method that was mistakenly removed in previous major release.
-- Added ability to set Conatiner to "share" by default using `defaultToShared` method.
+- Added ability to set Container to "share" by default using `defaultToShared` method.
 - Added ability for `ReflectionContainer` to cache resolutions and pull from cache for following calls.
 
 ## 3.0.1

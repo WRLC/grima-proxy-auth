@@ -14,7 +14,7 @@ trait MiddlewareAwareTrait
     /**
      * @var array
      */
-    protected $middleware = [];
+    protected array $middleware = [];
 
     public function getMiddlewareStack(): iterable
     {

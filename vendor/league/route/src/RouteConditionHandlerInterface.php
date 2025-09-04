@@ -10,8 +10,8 @@ interface RouteConditionHandlerInterface
     public function getName(): ?string;
     public function getPort(): ?int;
     public function getScheme(): ?string;
-    public function setHost(string $host): RouteConditionHandlerInterface;
-    public function setName(string $name): RouteConditionHandlerInterface;
-    public function setPort(int $port): RouteConditionHandlerInterface;
-    public function setScheme(string $scheme): RouteConditionHandlerInterface;
+    public function setHost(string $host): self;
+    public function setName(string $name): self;
+    public function setPort(int $port): self;
+    public function setScheme(string $scheme): self;
 }

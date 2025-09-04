@@ -7,5 +7,5 @@ namespace League\Route\Strategy;
 interface StrategyAwareInterface
 {
     public function getStrategy(): ?StrategyInterface;
-    public function setStrategy(StrategyInterface $strategy): StrategyAwareInterface;
+    public function setStrategy(StrategyInterface $strategy): self;
 }

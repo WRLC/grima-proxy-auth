@@ -17,21 +17,8 @@ class JsonStrategy extends AbstractStrategy implements ContainerAwareInterface, 
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var ResponseFactoryInterface
-     */
-    protected $responseFactory;
-
-    /**
-     * @var int
-     */
-    protected $jsonFlags;
-
-    public function __construct(ResponseFactoryInterface $responseFactory, int $jsonFlags = 0)
+    public function __construct(protected ResponseFactoryInterface $responseFactory, protected int $jsonFlags = 0)
     {
-        $this->responseFactory = $responseFactory;
-        $this->jsonFlags = $jsonFlags;
-
         $this->addResponseDecorator(static function (ResponseInterface $response): ResponseInterface {
             if (false === $response->hasHeader('content-type')) {
                 $response = $response->withHeader('content-type', 'application/json');

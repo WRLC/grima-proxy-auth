@@ -11,7 +11,7 @@ use Psr\Http\Server\MiddlewareInterface;
 
 interface StrategyInterface
 {
-    public function addResponseDecorator(callable $decorator): StrategyInterface;
+    public function addResponseDecorator(callable $decorator): self;
     public function getMethodNotAllowedDecorator(MethodNotAllowedException $exception): MiddlewareInterface;
     public function getNotFoundDecorator(NotFoundException $exception): MiddlewareInterface;
     public function getThrowableHandler(): MiddlewareInterface;

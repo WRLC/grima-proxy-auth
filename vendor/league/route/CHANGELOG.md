@@ -4,34 +4,62 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.1.2] 2021-07
+## [6.2.0] 2024-11
 
-## Added
-- Extra logic for `Route::gretPath` tp be able to properly resolve optional parameters.
+### Changed
+- Replaced opis/closure with laravel/serializable-closure and implemented throughout the handler process rather than a blanket serialisation of the router.
 
-## [5.1.1] 2021-07
+## [6.1.1] 2024-11
 
-## Fix
-- Fix to allow multiple routes with the same path to be mapped across multiple extra conditions (scheme, host, port).
+### Fixed
+- Further fixes for type hinting bug related to array based callables with a string class name.
+
+## [6.1.0] 2024-11
+
+### Fixed
+- Fixed a bug introduced in 6.0.0 where an array based callable with a string class name would not be considered valid.
+- Added some doc comments for clarity on array types. (@marekskopal)
+
+### Changed
+- Updated `psr/http-message` to `^2.0.0`.
+
+## [6.0.0] 2024-11
+
+> Note: While this is a major release, there are no breaking changes to the public API. The major version bump is due to the removal of support for PHP 8.0 and below.
+> 
+> This being said, there are some internal changes that may affect you if you have extended the library in any way. Please test thoroughly before upgrading.
+
+### Added
+- Added full support for PHP 8.1 to 8.4.
+- Ability to use a PSR-15 middleware as a controller.
+- Ability to pass an array of HTTP methods to `Router::map` to create a route that matches multiple methods.
+  - This method still accepts a string so is not a breaking change.
+- Ability to add a custom key to a caching router.
+
+### Changed
+- Fixes and improvements throughout for PHP 8.1 to 8.4.
+
+### Removed
+- Removed support for PHP < 8.1.
 
 ## [5.1.0] 2021-07
 
-## Added
+### Added
 - Support for named routes within groups (@Fredrik82)
 
 ## [5.0.1] 2021-03
 
-## Added
+### Added
 - Support for `psr/container:2.0`
 
 ## [5.0.0] 2021-01
 
-## Added
+### Added
 - A cached router, a way to have a fully built router cached and resolved from cache on subsequent requests.
 - Response decorators, a way to manipulate a response object returned from a matched route.
 - Automatic generation of OPTIONS routes if they have not been defined.
 
-## Changed
+### Changed
 - Minimum PHP requirement bumped to 7.2.
 - `Router` no longer extends FastRoute `RouteCollecter`.
     - `Router` constructor no longer accepts optional FastRoute `RouteParser` and `DataGenerator`.

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace League\Route;
 
 use League\Route\Middleware\{MiddlewareAwareInterface, MiddlewareAwareTrait};
+use Psr\Http\Server\RequestHandlerInterface;
 use League\Route\Strategy\{StrategyAwareInterface, StrategyAwareTrait};
 
 class RouteGroup implements
@@ -23,21 +24,13 @@ class RouteGroup implements
      */
     protected $callback;
 
-    /**
-     * @var RouteCollectionInterface
-     */
-    protected $collection;
-
-    /**
-     * @var string
-     */
-    protected $prefix;
-
-    public function __construct(string $prefix, callable $callback, RouteCollectionInterface $collection)
-    {
-        $this->callback   = $callback;
-        $this->collection = $collection;
-        $this->prefix     = sprintf('/%s', ltrim($prefix, '/'));
+    public function __construct(
+        protected string $prefix,
+        callable $callback,
+        protected RouteCollectionInterface $collection
+    ) {
+        $this->callback = $callback;
+        $this->prefix = sprintf('/%s', ltrim($this->prefix, '/'));
     }
 
     public function __invoke(): void
@@ -50,9 +43,12 @@ class RouteGroup implements
         return $this->prefix;
     }
 
-    public function map(string $method, string $path, $handler): Route
-    {
-        $path  = ($path === '/') ? $this->prefix : $this->prefix . sprintf('/%s', ltrim($path, '/'));
+    public function map(
+        string|array $method,
+        string $path,
+        callable|array|string|RequestHandlerInterface $handler
+    ): Route {
+        $path = ($path === '/') ? $this->prefix : $this->prefix . sprintf('/%s', ltrim($path, '/'));
         $route = $this->collection->map($method, $path, $handler);
 
         $route->setParentGroup($this);
