@@ -3,7 +3,7 @@
 /**
  * The cached router is currently in BETA and not recommended for production code.
  *
- * Please feel free to heavily test and report any issues as an issue on the Github repository.
+ * Please feel free to heavily test and report any issues as an issue on the GitHub repository.
  */
 
 declare(strict_types=1);
@@ -11,53 +11,49 @@ declare(strict_types=1);
 namespace League\Route\Cache;
 
 use InvalidArgumentException;
+use Laravel\SerializableClosure\SerializableClosure;
 use League\Route\Router as MainRouter;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\SimpleCache\CacheInterface;
 
-use function Opis\Closure\{serialize as s, unserialize as u};
-
 class Router
 {
-    protected const CACHE_KEY = 'league/route/cache';
-
     /**
      * @var callable
      */
     protected $builder;
 
-    /**
-     * @var CacheInterface
-     */
-    protected $cache;
+    protected int $ttl;
 
-    /**
-     * @var integer
-     */
-    protected $ttl;
+    public function __construct(
+        callable $builder,
+        protected CacheInterface $cache,
+        protected bool $cacheEnabled = true,
+        protected string $cacheKey = 'league/route/cache'
+    ) {
+        if (true === $this->cacheEnabled && $builder instanceof \Closure) {
+            $builder = new SerializableClosure($builder);
+        }
 
-    /**
-     * @var bool
-     */
-    protected $cacheEnabled;
-
-    public function __construct(callable $builder, CacheInterface $cache, bool $cacheEnabled = true)
-    {
         $this->builder = $builder;
-        $this->cache = $cache;
-        $this->cacheEnabled = $cacheEnabled;
     }
 
+    /**
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
     public function dispatch(ServerRequestInterface $request): ResponseInterface
     {
         $router = $this->buildRouter($request);
         return $router->dispatch($request);
     }
 
+    /**
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
     protected function buildRouter(ServerRequestInterface $request): MainRouter
     {
-        if (true === $this->cacheEnabled && $cache = $this->cache->get(static::CACHE_KEY)) {
-            $router = u($cache, ['allowed_classes' => true]);
+        if (true === $this->cacheEnabled && $cache = $this->cache->get($this->cacheKey)) {
+            $router = unserialize($cache, ['allowed_classes' => true]);
 
             if ($router instanceof MainRouter) {
                 return $router;
@@ -65,6 +61,11 @@ class Router
         }
 
         $builder = $this->builder;
+
+        if ($builder instanceof SerializableClosure) {
+            $builder = $builder->getClosure();
+        }
+
         $router = $builder(new MainRouter());
 
         if (false === $this->cacheEnabled) {
@@ -73,7 +74,7 @@ class Router
 
         if ($router instanceof MainRouter) {
             $router->prepareRoutes($request);
-            $this->cache->set(static::CACHE_KEY, s($router));
+            $this->cache->set($this->cacheKey, serialize($router));
             return $router;
         }
 

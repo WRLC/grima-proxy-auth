@@ -29,17 +29,14 @@ class Router implements
     /**
      * @var RouteGroup[]
      */
-    protected $groups = [];
+    protected array $groups = [];
 
     /**
      * @var Route[]
      */
-    protected $namedRoutes = [];
+    protected array $namedRoutes = [];
 
-    /**
-     * @var array
-     */
-    protected $patternMatchers = [
+    protected array $patternMatchers = [
         '/{(.+?):number}/'        => '{$1:[0-9]+}',
         '/{(.+?):word}/'          => '{$1:[a-zA-Z]+}',
         '/{(.+?):alphanum_dash}/' => '{$1:[a-zA-Z0-9-_]+}',
@@ -48,28 +45,17 @@ class Router implements
     ];
 
     /**
-     * @var RouteCollector
-     */
-    protected $routeCollector;
-
-    /**
      * @var Route[]
      */
-    protected $routes = [];
+    protected array $routes = [];
 
-    /**
-     * @var bool
-     */
-    protected $routesPrepared = false;
+    protected bool $routesPrepared = false;
 
-    /**
-     * @var array
-     */
-    protected $routesData = [];
+    protected array $routesData = [];
 
-    public function __construct(?RouteCollector $routeCollector = null)
+    public function __construct(protected ?RouteCollector $routeCollector = null)
     {
-        $this->routeCollector = $routeCollector ?? new RouteCollector(
+        $this->routeCollector = $this->routeCollector ?? new RouteCollector(
             new RouteParser\Std(),
             new DataGenerator\GroupCountBased()
         );
@@ -131,9 +117,12 @@ class Router implements
         return $this->dispatch($request);
     }
 
-    public function map(string $method, string $path, $handler): Route
-    {
-        $path  = sprintf('/%s', ltrim($path, '/'));
+    public function map(
+        string|array $method,
+        string $path,
+        callable|array|string|RequestHandlerInterface $handler
+    ): Route {
+        $path = sprintf('/%s', ltrim($path, '/'));
         $route = new Route($method, $path, $handler);
 
         $this->routes[] = $route;

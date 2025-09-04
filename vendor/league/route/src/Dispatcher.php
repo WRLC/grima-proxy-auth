@@ -26,8 +26,8 @@ class Dispatcher extends GroupCountBasedDispatcher implements
     public function dispatchRequest(ServerRequestInterface $request): ResponseInterface
     {
         $method = $request->getMethod();
-        $uri    = $request->getUri()->getPath();
-        $match  = $this->dispatch($method, $uri);
+        $uri = $request->getUri()->getPath();
+        $match = $this->dispatch($method, $uri);
 
         switch ($match[0]) {
             case FastRoute::NOT_FOUND:

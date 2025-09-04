@@ -9,33 +9,14 @@ use Psr\Http\Message\ResponseInterface;
 
 class Exception extends \Exception implements HttpExceptionInterface
 {
-    /**
-     * @var array
-     */
-    protected $headers = [];
-
-    /**
-     * @var string
-     */
-    protected $message;
-
-    /**
-     * @var integer
-     */
-    protected $status;
-
     public function __construct(
-        int $status,
-        string $message = null,
-        \Exception $previous = null,
-        array $headers = [],
+        protected int $status,
+        protected $message = '',
+        ?\Exception $previous = null,
+        protected array $headers = [],
         int $code = 0
     ) {
-        $this->headers = $headers;
-        $this->message = $message;
-        $this->status  = $status;
-
-        parent::__construct($message, $code, $previous);
+        parent::__construct($this->message, $code, $previous);
     }
 
     public function getStatusCode(): int
@@ -59,7 +40,7 @@ class Exception extends \Exception implements HttpExceptionInterface
 
         if ($response->getBody()->isWritable()) {
             $response->getBody()->write(json_encode([
-                'status_code'   => $this->status,
+                'status_code' => $this->status,
                 'reason_phrase' => $this->message
             ]));
         }

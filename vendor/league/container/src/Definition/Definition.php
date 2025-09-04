@@ -12,64 +12,28 @@ use League\Container\Argument\{
 };
 use League\Container\ContainerAwareTrait;
 use League\Container\Exception\ContainerException;
-use League\Container\Exception\NotFoundException;
-use Psr\Container\ContainerInterface;
+use Psr\Container\{ContainerExceptionInterface, ContainerInterface, NotFoundExceptionInterface};
 use ReflectionClass;
+use ReflectionException;
 
 class Definition implements ArgumentResolverInterface, DefinitionInterface
 {
     use ArgumentResolverTrait;
     use ContainerAwareTrait;
 
-    /**
-     * @var string
-     */
-    protected $alias;
+    protected mixed $resolved = null;
+    protected array $recursiveCheck = [];
 
-    /**
-     * @var mixed
-     */
-    protected $concrete;
-
-    /**
-     * @var boolean
-     */
-    protected $shared = false;
-
-    /**
-     * @var array
-     */
-    protected $tags = [];
-
-    /**
-     * @var array
-     */
-    protected $arguments = [];
-
-    /**
-     * @var array
-     */
-    protected $methods = [];
-
-    /**
-     * @var mixed
-     */
-    protected $resolved;
-
-    /**
-     * @var array
-     */
-    protected $recursiveCheck = [];
-
-    /**
-     * @param string     $id
-     * @param mixed|null $concrete
-     */
-    public function __construct(string $id, $concrete = null)
-    {
-        $concrete = $concrete ?? $id;
-        $this->alias    = $id;
-        $this->concrete = $concrete;
+    public function __construct(
+        protected string $id,
+        protected mixed $concrete = null,
+        protected bool $shared = false,
+        protected array $arguments = [],
+        protected array $methods = [],
+        protected array $tags = [],
+    ) {
+        $this->setId($this->id);
+        $this->concrete ??= $this->id;
     }
 
     public function addTag(string $tag): DefinitionInterface
@@ -83,15 +47,25 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
         return isset($this->tags[$tag]);
     }
 
+    public function setId(string $id): DefinitionInterface
+    {
+        $this->id = static::normaliseAlias($id);
+        return $this;
+    }
+
+    public function getId(): string
+    {
+        return static::normaliseAlias($this->id);
+    }
+
     public function setAlias(string $id): DefinitionInterface
     {
-        $this->alias = $id;
-        return $this;
+        return $this->setId($id);
     }
 
     public function getAlias(): string
     {
-        return $this->alias;
+        return $this->getId();
     }
 
     public function setShared(bool $shared = true): DefinitionInterface
@@ -105,19 +79,19 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
         return $this->shared;
     }
 
-    public function getConcrete()
+    public function getConcrete(): mixed
     {
         return $this->concrete;
     }
 
-    public function setConcrete($concrete): DefinitionInterface
+    public function setConcrete(mixed $concrete): DefinitionInterface
     {
         $this->concrete = $concrete;
         $this->resolved = null;
         return $this;
     }
 
-    public function addArgument($arg): DefinitionInterface
+    public function addArgument(mixed $arg): DefinitionInterface
     {
         $this->arguments[] = $arg;
         return $this;
@@ -135,7 +109,7 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
     public function addMethodCall(string $method, array $args = []): DefinitionInterface
     {
         $this->methods[] = [
-            'method'    => $method,
+            'method' => $method,
             'arguments' => $args
         ];
 
@@ -151,7 +125,12 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
         return $this;
     }
 
-    public function resolve()
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
+     */
+    public function resolve(): mixed
     {
         if (null !== $this->resolved && $this->isShared()) {
             return $this->resolved;
@@ -160,7 +139,12 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
         return $this->resolveNew();
     }
 
-    public function resolveNew()
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
+     */
+    public function resolveNew(): mixed
     {
         $concrete = $this->concrete;
 
@@ -187,14 +171,16 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
 
         try {
             $container = $this->getContainer();
-        } catch (ContainerException $e) {
+        } catch (ContainerException) {
             $container = null;
         }
 
-        // stop recursive resolving
-        if (is_string($concrete) && in_array($concrete, $this->recursiveCheck)) {
-            $this->resolved = $concrete;
-            return $concrete;
+        if (is_string($concrete)) {
+            if (class_exists($concrete)) {
+                $concrete = $this->resolveClass($concrete);
+            } elseif ($this->getAlias() === $concrete) {
+                return $concrete;
+            }
         }
 
         // if we still have a string, try to pull it from the container
@@ -209,15 +195,21 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
     }
 
     /**
-     * @param callable $concrete
-     * @return mixed
+     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function resolveCallable(callable $concrete)
+    protected function resolveCallable(callable $concrete): mixed
     {
         $resolved = $this->resolveArguments($this->arguments);
         return call_user_func_array($concrete, $resolved);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     */
     protected function resolveClass(string $concrete): object
     {
         $resolved   = $this->resolveArguments($this->arguments);
@@ -225,6 +217,11 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
         return $reflection->newInstanceArgs($resolved);
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function invokeMethods(object $instance): object
     {
         foreach ($this->methods as $method) {
@@ -234,5 +231,10 @@ class Definition implements ArgumentResolverInterface, DefinitionInterface
         }
 
         return $instance;
+    }
+
+    public static function normaliseAlias(string $alias): string
+    {
+        return ltrim($alias, "\\");
     }
 }
